@@ -4,7 +4,7 @@
 #define GREEN 6
 #define BLUE 9
 //Step for RGB light output
-#define STEP 25
+#define STEP 05
 // Max PWD output
 #define TOP 255
 
@@ -37,22 +37,16 @@ void loop() {
   Serial.print("Distance: ");
   Serial.println(distance);                     
   for (i = 0; i <= distance; i++) {
-    red += STEP;
 
-    if (red > TOP) {
-      red = 0;
+    if (red < TOP) {
+      red += STEP;
+    } else if ( green < TOP) {
       green += STEP;
-    }
-
-    if (green > TOP) {
-      green = 0;
+    } else if ( blue < TOP) {
       blue += STEP;
+    } else {
+      break;
     }
-
-    if (blue > TOP) {
-      blue = TOP;
-    }
-
   }
 
   analogWrite(RED, red);
