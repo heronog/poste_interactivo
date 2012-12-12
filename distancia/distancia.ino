@@ -1,53 +1,63 @@
 #define ECHOPIN 2                            // Pin to receive echo pulse
 #define TRIGPIN 3                            // Pin to send trigger pulse
-#define RED 4
-#define GREEN 5
-#define BLUE 6
+#define RED 5
+#define GREEN 6
+#define BLUE 9
+//Step for RGB light output
+#define STEP 25
+// Max PWD output
+#define TOP 255
 
-void setup(){
+void setup() {
   Serial.begin(9600);
   pinMode(ECHOPIN, INPUT);
   pinMode(TRIGPIN, OUTPUT);
   pinMode(RED,OUTPUT);
   pinMode(GREEN, OUTPUT);
   pinMode(BLUE, OUTPUT);
-  digitalWrite(RED,LOW);
-  digitalWrite(GREEN,LOW);
-  digitalWrite(BLUE,LOW);
+  analogWrite(RED,LOW);
+  analogWrite(GREEN,LOW);
+  analogWrite(BLUE,LOW);
 }
 
-void loop(){
-  digitalWrite(TRIGPIN, LOW);                   // Set the trigger pin to low for 2uS
+void loop() {                   
+  int i = 0, red = 0, green = 0, blue = 0;
+  // Set the trigger pin to low for 2uS
+  digitalWrite(TRIGPIN, LOW);
   delayMicroseconds(2);
-  digitalWrite(TRIGPIN, HIGH);                  // Send a 10uS high to trigger ranging
+  // Send a 10uS high to trigger ranging
+  digitalWrite(TRIGPIN, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TRIGPIN, LOW);                   // Send pin low again
-  int distance = pulseIn(ECHOPIN, HIGH);        // Read in times pulse
-  distance = distance/58;                         // Calculate distance from time of pulse
-  if (distance >= 100){
-     Serial.println("eniende RED");
-     digitalWrite(GREEN,LOW);
-     digitalWrite(BLUE,LOW);
-     digitalWrite(RED, HIGH);
-  }   
-  else if(distance < 100 && distance >= 60){
-     Serial.println("eniende GREEN");
-     digitalWrite(BLUE,LOW);
-     digitalWrite(RED, LOW);
-     digitalWrite(GREEN, HIGH);
-  }
-  else if (distance < 60 && distance >= 30){
-     Serial.println("eniende BLUE");
-     digitalWrite(RED, LOW);
-     digitalWrite(GREEN, LOW);
-     digitalWrite(BLUE, HIGH);     
-  }
-  else if (distance <= 30){
-     Serial.println("enienden Todos");
-     digitalWrite(GREEN, HIGH);
-     digitalWrite(BLUE, HIGH);
-     digitalWrite(RED, HIGH);    
-  }
+  // Send pin low again
+  digitalWrite(TRIGPIN, LOW);
+  // Read in times pulse
+  int distance = pulseIn(ECHOPIN, HIGH);
+  // Calculate distance from time of pulse
+  distance = distance/58;
+  Serial.print("Distance: ");
   Serial.println(distance);                     
-  delay(100);                                    // Wait 50mS before next ranging
+  for (i = 0; i <= distance; i++) {
+    red += STEP;
+
+    if (red > TOP) {
+      red = 0;
+      green += STEP;
+    }
+
+    if (green > TOP) {
+      green = 0;
+      blue += STEP;
+    }
+
+    if (blue > TOP) {
+      blue = TOP;
+    }
+
+  }
+
+  analogWrite(RED, red);
+  analogWrite(GREEN, green);
+  analogWrite(BLUE, blue);
+  
+  delay(100); 
 }
