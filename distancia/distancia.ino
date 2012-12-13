@@ -4,7 +4,7 @@
 #define GREEN 6
 #define BLUE 9
 //Step for RGB light output
-#define STEP 10
+#define STEP 15
 // Max PWD output
 #define TOP 255
 
@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop() {                   
-  int i = 0, red = 1, green = 1, blue = 1;
+  int i = 0, red = 10, green = 1, blue = 1;
   // Set the trigger pin to low for 2uS
   digitalWrite(TRIGPIN, LOW);
   delayMicroseconds(2);
