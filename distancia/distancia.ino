@@ -4,7 +4,7 @@
 #define GREEN 6
 #define BLUE 9
 //Step for RGB light output
-#define STEP 05
+#define STEP 10
 // Max PWD output
 #define TOP 255
 
@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop() {                   
-  int i = 0, red = 0, green = 0, blue = 0;
+  int i = 0, red = 1, green = 1, blue = 1;
   // Set the trigger pin to low for 2uS
   digitalWrite(TRIGPIN, LOW);
   delayMicroseconds(2);
@@ -38,11 +38,11 @@ void loop() {
   Serial.println(distance);                     
   for (i = 0; i <= distance; i++) {
 
-    if (red < TOP) {
+    if (red < (TOP - STEP)) {
       red += STEP;
-    } else if ( green < TOP) {
+    } else if ( green < (TOP - STEP)) {
       green += STEP;
-    } else if ( blue < TOP) {
+    } else if ( blue < (TOP - STEP)) {
       blue += STEP;
     } else {
       break;
